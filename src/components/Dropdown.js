@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Box from '@mui/material/Box'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -7,7 +7,8 @@ import Select from '@mui/material/Select'
 
 export default function Dropdown({ label, value, setValue }) {
   const handleChange = (event) => {
-    setValue(event.target.value)
+    const selection = event.target.value
+    setValue((value) => ({ selection, data: value.data }))
   }
 
   return (
@@ -17,7 +18,7 @@ export default function Dropdown({ label, value, setValue }) {
         <Select
           labelId="simple-dropdown-label"
           id="simple-dropdown"
-          value={value}
+          value={value.selection}
           label={label}
           onChange={handleChange}
         >
