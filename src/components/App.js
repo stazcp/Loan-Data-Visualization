@@ -24,9 +24,16 @@ export default function App() {
     ;(async () => console.log(await getData()))()
   }, [])
 
+  const handleReset = () => {
+    setHome(null)
+    setQuarter(null)
+    setTerm(null)
+    setYear(null)
+  }
+
   return (
     <Container
-      maxWidth="md"
+      maxWidth="lg"
       sx={{
         pt: '20vh',
         display: 'flex',
@@ -34,42 +41,44 @@ export default function App() {
         alignItems: 'center',
       }}
     >
-      <Box sx={{ width: '1000px', height: '400px' }}>
-        <Grid container spacing={0}>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>Grade 1</Box>
+      <Box sx={{ width: '1000px' }}>
+        <Box sx={{ height: '400px' }}>
+          <Grid container spacing={0}>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>Grade 1</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>Grade 2</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>Grade 3</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>Grade 4</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>$100.000</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>$100.000</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>$300000000</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={styles.boxStyle}>$123499999912419999</Box>
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>Grade 2</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>Grade 3</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>Grade 4</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>$100.000</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>$100.000</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>$300000000</Box>
-          </Grid>
-          <Grid item xs={3}>
-            <Box sx={styles.boxStyle}>$123499999912419999</Box>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box sx={{ display: 'flex' }}>
-        <Dropdown label="Home Ownership" value={home} setValue={setHome} />
-        <Dropdown label="Quarter" value={quarter} setValue={setQuarter} />
-        <Dropdown label="Term" value={term} setValue={setTerm} />
-        <Dropdown label="Year" value={year} setValue={setYear} />
-        <Button variant="outlined" sx={{ width: '150px', ml: 10 }}>
-          Reset
-        </Button>
+        </Box>
+        <Box sx={{ display: 'flex' }}>
+          <Dropdown label="Home Ownership" value={home} setValue={setHome} />
+          <Dropdown label="Quarter" value={quarter} setValue={setQuarter} />
+          <Dropdown label="Term" value={term} setValue={setTerm} />
+          <Dropdown label="Year" value={year} setValue={setYear} />
+          <Button variant="outlined" sx={{ width: '150px', ml: 10 }} onClick={handleReset}>
+            Reset
+          </Button>
+        </Box>
       </Box>
     </Container>
   )
