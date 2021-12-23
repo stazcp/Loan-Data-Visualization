@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getData } from '../request/api'
 import { Container, Grid, Box, Button } from '@mui/material'
 import Dropdown from './Dropdown'
+import Charts from './Charts'
 
 const styles = {
   boxStyle: {
@@ -21,15 +22,15 @@ export default function App() {
   const [YEAR, setYEAR] = useState({ selection: '', items: [] })
   const [GRADES, setGRADES] = useState()
   const [DATA, setDATA] = useState()
-  const [filteredData, setFilteredData] = useState({ data: [], filters: [] })
   const [filters, setFilters] = useState([])
 
   useEffect(() => {
     init()
   }, [])
 
+  // applies filters after being set
   useEffect(() => {
-    if (filters.length) runFilters()
+    if (filters.length) applyFilters()
   }, [filters])
 
   const init = async () => {
@@ -92,8 +93,8 @@ export default function App() {
     setFilters((filters) => [...filters, type])
   }
 
-  // performing SQL with JS pretty much
-  const runFilters = () => {
+  // performing SQL with JS
+  const applyFilters = () => {
     let newData = DATA
     filters.forEach((f) => {
       switch (f) {
@@ -121,55 +122,13 @@ export default function App() {
     reAggregateData(newData)
   }
 
-  // applies filters to displayed data
-  // const filterData = (selection, type) => {
-  //   let newData = []
-
-  //   if (filteredData.data.length && !filteredData.filters.includes(type)) {
-  //     console.log('case1')
-  //     newData = filteredData.data.filter((datum) => {
-  //       if (datum[type] === selection) return datum
-  //     })
-  //     setFilteredData((filteredData) => ({
-  //       data: newData,
-  //       filters: [...filteredData.filters, type],
-  //     }))
-  //   } else if (filteredData.data && filteredData.filters.includes(type)) {
-  //     console.log('case2')
-  //     if (filteredData.filters.length < 2) {
-  //       newData = DATA.filter((datum) => {
-  //         if (datum[type] === selection) return datum
-  //       })
-  //       setFilteredData((filteredData) => ({
-  //         data: newData,
-  //         filters: [...filteredData.filters, type],
-  //       }))
-  //     } else {
-  //       console.log('gotta apply all filters')
-  //     }
-  //   } else {
-  //     console.log('else')
-  //     newData = DATA.filter((datum) => {
-  //       if (datum[type] === selection) return datum
-  //     })
-  //     setFilteredData((filteredData) => ({
-  //       data: newData,
-  //       filters: [...filteredData.filters, type],
-  //     }))
-  //   }
-
-  //   console.log(newData)
-  //   reAggregateData(newData)
-  // }
-
-  const handleReset = () => {
+  const reset = () => {
     setHOME((home) => ({ selection: '', items: home.items }))
     setQUARTER((quarter) => ({ selection: '', items: quarter.items }))
     setTERM((term) => ({ selection: '', items: term.items }))
     setYEAR((year) => ({ selection: '', items: year.items }))
     reAggregateData(DATA)
     setFilters([])
-    // setFilteredData({ data: [], filters: [] })
   }
 
   return (
@@ -180,8 +139,10 @@ export default function App() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        pb: 4,
       }}
     >
+      {GRADES && <Charts data={GRADES} />}
       <Box sx={{ width: '1200px' }}>
         <Box sx={{ height: '400px' }}>
           <Grid container spacing={0}>
@@ -242,7 +203,7 @@ export default function App() {
               type="year"
             />
           </Box>
-          <Button variant="outlined" sx={{ width: '150px' }} onClick={handleReset}>
+          <Button variant="outlined" sx={{ width: '150px' }} onClick={reset}>
             Reset
           </Button>
         </Box>
