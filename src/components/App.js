@@ -15,10 +15,10 @@ const styles = {
 }
 
 export default function App() {
-  const [home, setHome] = useState({ selection: null, data: [] })
-  const [quarter, setQuarter] = useState({ selection: null, data: [] })
-  const [term, setTerm] = useState({ selection: null, data: [] })
-  const [year, setYear] = useState({ selection: null, data: [] })
+  const [home, setHome] = useState({ selection: '', data: [] })
+  const [quarter, setQuarter] = useState({ selection: '', data: [] })
+  const [term, setTerm] = useState({ selection: '', data: [] })
+  const [year, setYear] = useState({ selection: '', data: [] })
 
   useEffect(() => {
     ;(async () => console.log(await getData()))()
@@ -27,10 +27,10 @@ export default function App() {
   //const
 
   const handleReset = () => {
-    setHome((home) => ({ selection: null, data: home.data }))
-    setQuarter((quarter) => ({ selection: null, data: quarter.data }))
-    setTerm((term) => ({ selection: null, data: term.data }))
-    setYear((year) => ({ selection: null, data: year.data }))
+    setHome((home) => ({ selection: '', data: home.data }))
+    setQuarter((quarter) => ({ selection: '', data: quarter.data }))
+    setTerm((term) => ({ selection: '', data: term.data }))
+    setYear((year) => ({ selection: '', data: year.data }))
   }
 
   return (
