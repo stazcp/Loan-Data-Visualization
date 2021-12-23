@@ -23,29 +23,34 @@ export default function App() {
   const [DATA, setDATA] = useState()
 
   useEffect(() => {
-    ;(async () => {
-      if (!DATA) {
-        const data = await getData()
-        setDATA(Object.values(data))
-      }
-    })()
+    init()
   }, [])
 
-  useEffect(() => {
-    if (DATA) {
-      console.log(DATA)
-      sortData()
+  const init = async () => {
+    if (!DATA) {
+      let data = await getData()
+      if (data) {
+        data = Object.values(data)
+        setDATA(data)
+        sortData(data)
+      }
     }
-  }, [DATA])
+  }
 
-  const sortData = () => {
+  // useEffect(() => {
+  //   if (DATA) {
+  //     reAggregateData()
+  //   }
+  // }, [DATA])
+
+  const sortData = (data) => {
     const homes = [],
       terms = [],
       quarters = [],
       years = [],
       grades = {}
 
-    DATA.forEach((datum) => {
+    data.forEach((datum) => {
       const { homeOwnership, term, quarter, year, grade, currentBalance } = datum
       if (homeOwnership && !homes.includes(homeOwnership)) homes.push(homeOwnership)
       if (term && !terms.includes(term)) terms.push(term)
@@ -66,13 +71,51 @@ export default function App() {
     setGRADES(grades)
   }
 
-  const aggregateGrades = () => {}
+  const reAggregateData = (data) => {
+    const grades = {}
+    data.forEach((datum) => {
+      const { currentBalance, grade } = datum
+      if (grade) {
+        if (!Object.keys(grades).includes(grade)) {
+          grades[grade] = parseInt(currentBalance)
+        } else {
+          grades[grade] += parseInt(currentBalance)
+        }
+      }
+    })
+    console.log(grades)
+    setGRADES(grades)
+  }
+
+  // const filterData = (selection, type) => {
+  //   let newData = []
+  //   switch (type) {
+  //     case 'Home Ownership':
+  //       newData = DATA.filter((datum) => {
+  //         if (datum.homeOwnership === selection) return datum
+  //       })
+  //       break
+  //     case 'Quarter':
+  //   }
+  // }
+
+  const filterByHome = (selection) => {
+    const newData = DATA.filter((datum) => {
+      if (datum.homeOwnership === selection) return datum
+    })
+    reAggregateData(newData)
+  }
+
+  const filterByQuarter = () => {}
+  const filterByTerm = () => {}
+  const filterByYear = () => {}
 
   const handleReset = () => {
     setHOME((home) => ({ selection: '', items: home.items }))
     setQUARTER((quarter) => ({ selection: '', items: quarter.items }))
     setTERM((term) => ({ selection: '', items: term.items }))
     setYEAR((year) => ({ selection: '', items: year.items }))
+    reAggregateData(DATA)
   }
 
   return (
@@ -108,36 +151,28 @@ export default function App() {
             </Grid>
             {GRADES &&
               Object.values(GRADES).map((GRADE) => (
-                <Grid item xs={2}>
+                <Grid item xs={2} key={GRADE}>
                   <Box sx={styles.boxStyle}>${GRADE.toFixed(2)}</Box>
                 </Grid>
               ))}
-            {/* <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$100.000</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$100.000</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$200000000</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$122499999912419999</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$200000000</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>$123499999912419999</Box>
-            </Grid> */}
           </Grid>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Dropdown label="Home Ownership" data={HOME} setData={setHOME} />
-            <Dropdown label="Quarter" data={QUARTER} setData={setQUARTER} />
-            <Dropdown label="Term" data={TERM} setData={setTERM} />
-            <Dropdown label="Year" data={YEAR} setData={setYEAR} />
+            <Dropdown
+              label="Home Ownership"
+              data={HOME}
+              setData={setHOME}
+              filterData={filterByHome}
+            />
+            <Dropdown
+              label="Quarter"
+              data={QUARTER}
+              setData={setQUARTER}
+              filterData={filterByQuarter}
+            />
+            <Dropdown label="Term" data={TERM} setData={setTERM} filterData={filterByTerm} />
+            <Dropdown label="Year" data={YEAR} setData={setYEAR} filterData={filterByYear} />
           </Box>
           <Button variant="outlined" sx={{ width: '150px' }} onClick={handleReset}>
             Reset
