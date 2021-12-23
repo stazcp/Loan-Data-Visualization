@@ -21,10 +21,16 @@ export default function App() {
   const [YEAR, setYEAR] = useState({ selection: '', items: [] })
   const [GRADES, setGRADES] = useState()
   const [DATA, setDATA] = useState()
+  const [filteredData, setFilteredData] = useState({ data: [], filters: [] })
+  const [filters, setFilters] = useState([])
 
   useEffect(() => {
     init()
   }, [])
+
+  useEffect(() => {
+    if (filters.length) runFilters()
+  }, [filters])
 
   const init = async () => {
     if (!DATA) {
@@ -37,12 +43,7 @@ export default function App() {
     }
   }
 
-  // useEffect(() => {
-  //   if (DATA) {
-  //     reAggregateData()
-  //   }
-  // }, [DATA])
-
+  // initial data sorting and aggregation
   const sortData = (data) => {
     const homes = [],
       terms = [],
@@ -71,6 +72,7 @@ export default function App() {
     setGRADES(grades)
   }
 
+  // re-aggregate data according to filters
   const reAggregateData = (data) => {
     const grades = {}
     data.forEach((datum) => {
@@ -83,32 +85,82 @@ export default function App() {
         }
       }
     })
-    console.log(grades)
     setGRADES(grades)
   }
 
-  // const filterData = (selection, type) => {
-  //   let newData = []
-  //   switch (type) {
-  //     case 'Home Ownership':
-  //       newData = DATA.filter((datum) => {
-  //         if (datum.homeOwnership === selection) return datum
-  //       })
-  //       break
-  //     case 'Quarter':
-  //   }
-  // }
+  const filterData = (selection, type) => {
+    setFilters((filters) => [...filters, type])
+  }
 
-  const filterByHome = (selection) => {
-    const newData = DATA.filter((datum) => {
-      if (datum.homeOwnership === selection) return datum
+  const runFilters = () => {
+    let newData = DATA
+    filters.forEach((f) => {
+      switch (f) {
+        case 'homeOwnership':
+          newData = newData.filter((datum) => {
+            if (datum[f] === HOME.selection) return datum
+          })
+          break
+        case 'quarter':
+          newData = newData.filter((datum) => {
+            if (datum[f] === QUARTER.selection) return datum
+          })
+          break
+        case 'term':
+          newData = newData.filter((datum) => {
+            if (datum[f] === TERM.selection) return datum
+          })
+          break
+        default:
+          newData = newData.filter((datum) => {
+            if (datum[f] === YEAR.selection) return datum
+          })
+      }
     })
+    console.log(newData)
     reAggregateData(newData)
   }
 
-  const filterByQuarter = () => {}
-  const filterByTerm = () => {}
-  const filterByYear = () => {}
+  // applies filters to displayed data
+  // const filterData = (selection, type) => {
+  //   let newData = []
+
+  //   if (filteredData.data.length && !filteredData.filters.includes(type)) {
+  //     console.log('case1')
+  //     newData = filteredData.data.filter((datum) => {
+  //       if (datum[type] === selection) return datum
+  //     })
+  //     setFilteredData((filteredData) => ({
+  //       data: newData,
+  //       filters: [...filteredData.filters, type],
+  //     }))
+  //   } else if (filteredData.data && filteredData.filters.includes(type)) {
+  //     console.log('case2')
+  //     if (filteredData.filters.length < 2) {
+  //       newData = DATA.filter((datum) => {
+  //         if (datum[type] === selection) return datum
+  //       })
+  //       setFilteredData((filteredData) => ({
+  //         data: newData,
+  //         filters: [...filteredData.filters, type],
+  //       }))
+  //     } else {
+  //       console.log('gotta apply all filters')
+  //     }
+  //   } else {
+  //     console.log('else')
+  //     newData = DATA.filter((datum) => {
+  //       if (datum[type] === selection) return datum
+  //     })
+  //     setFilteredData((filteredData) => ({
+  //       data: newData,
+  //       filters: [...filteredData.filters, type],
+  //     }))
+  //   }
+
+  //   console.log(newData)
+  //   reAggregateData(newData)
+  // }
 
   const handleReset = () => {
     setHOME((home) => ({ selection: '', items: home.items }))
@@ -116,6 +168,7 @@ export default function App() {
     setTERM((term) => ({ selection: '', items: term.items }))
     setYEAR((year) => ({ selection: '', items: year.items }))
     reAggregateData(DATA)
+    setFilteredData({ data: [], filters: [] })
   }
 
   return (
@@ -163,16 +216,30 @@ export default function App() {
               label="Home Ownership"
               data={HOME}
               setData={setHOME}
-              filterData={filterByHome}
+              filterData={filterData}
+              type="homeOwnership"
             />
             <Dropdown
               label="Quarter"
               data={QUARTER}
               setData={setQUARTER}
-              filterData={filterByQuarter}
+              filterData={filterData}
+              type="quarter"
             />
-            <Dropdown label="Term" data={TERM} setData={setTERM} filterData={filterByTerm} />
-            <Dropdown label="Year" data={YEAR} setData={setYEAR} filterData={filterByYear} />
+            <Dropdown
+              label="Term"
+              data={TERM}
+              setData={setTERM}
+              filterData={filterData}
+              type="term"
+            />
+            <Dropdown
+              label="Year"
+              data={YEAR}
+              setData={setYEAR}
+              filterData={filterData}
+              type="year"
+            />
           </Box>
           <Button variant="outlined" sx={{ width: '150px' }} onClick={handleReset}>
             Reset

@@ -5,11 +5,11 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
-export default function Dropdown({ label, setData, data, filterData }) {
+export default function Dropdown({ label, setData, data, filterData, type }) {
   const handleChange = (event) => {
     const selection = event.target.value
     setData((data) => ({ selection, items: data.items }))
-    filterData(selection)
+    filterData(selection, type)
   }
 
   return (
