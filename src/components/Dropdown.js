@@ -5,10 +5,9 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
-export default function Dropdown({ label, value, setValue }) {
+export default function Dropdown({ label, setData, data }) {
   const handleChange = (event) => {
-    const selection = event.target.value
-    setValue((value) => ({ selection, data: value.data }))
+    setData((data) => ({ selection: event.target.value, items: data.items }))
   }
 
   return (
@@ -18,13 +17,16 @@ export default function Dropdown({ label, value, setValue }) {
         <Select
           labelId="simple-dropdown-label"
           id="simple-dropdown"
-          value={value.selection}
+          value={data.selection}
           label={label}
           onChange={handleChange}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {data &&
+            data.items.map((item) => (
+              <MenuItem value={item} key={item}>
+                {item}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
     </Box>
