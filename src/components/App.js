@@ -92,6 +92,7 @@ export default function App() {
     setFilters((filters) => [...filters, type])
   }
 
+  // performing SQL with JS pretty much
   const runFilters = () => {
     let newData = DATA
     filters.forEach((f) => {
@@ -117,7 +118,6 @@ export default function App() {
           })
       }
     })
-    console.log(newData)
     reAggregateData(newData)
   }
 
@@ -168,7 +168,8 @@ export default function App() {
     setTERM((term) => ({ selection: '', items: term.items }))
     setYEAR((year) => ({ selection: '', items: year.items }))
     reAggregateData(DATA)
-    setFilteredData({ data: [], filters: [] })
+    setFilters([])
+    // setFilteredData({ data: [], filters: [] })
   }
 
   return (
