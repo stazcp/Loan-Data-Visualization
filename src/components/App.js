@@ -131,6 +131,14 @@ export default function App() {
     setFilters([])
   }
 
+  const renderGrades = () => {
+    return Object.keys(GRADES).map((grade) => (
+      <Grid item xs={2} keys={grade}>
+        <Box sx={styles.boxStyle}>Grade {grade}</Box>
+      </Grid>
+    ))
+  }
+
   return (
     <Container
       maxWidth="lg"
@@ -146,24 +154,7 @@ export default function App() {
       <Box sx={{ width: '1200px' }}>
         <Box sx={{ height: '400px' }}>
           <Grid container spacing={0}>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 1</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 2</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 2</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 4</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 5</Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={styles.boxStyle}>Grade 6</Box>
-            </Grid>
+            {GRADES && renderGrades()}
             {GRADES &&
               Object.values(GRADES).map((GRADE) => (
                 <Grid item xs={2} key={GRADE}>

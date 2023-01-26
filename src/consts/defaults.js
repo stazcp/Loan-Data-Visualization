@@ -1,3 +1,4 @@
+// data used for building ui and potentially testing
 export const defaultData = [
   {
     name: 0,

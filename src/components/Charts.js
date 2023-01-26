@@ -1,6 +1,5 @@
 import React from 'react'
 import { BarChart, Bar } from 'recharts'
-import { defaultData } from '../consts/defaults'
 
 export default function Charts({ data }) {
   const transformData = (data) => {
